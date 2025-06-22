@@ -1,23 +1,21 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useCallback, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { Upload, Zap, Brain, Shield } from "lucide-react"
-import { cache } from "@/lib/simplified-cache"
-import { analytics } from "@/lib/simplified-analytics"
+import { Button } from "@/components/ui/button"
+import { Upload, Zap, Brain, Shield, CheckCircle, AlertTriangle, Copy, ExternalLink } from "lucide-react"
+import { aiDetectionService, DetectionResult } from "@/lib/ai-detection-apis"
 
-// Optimized detection interface with performance improvements
 export function PerformanceOptimizedDetection() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [progress, setProgress] = useState(0)
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<DetectionResult | null>(null)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
-  // Memoized file validation
+  // File validation
   const validateFile = useCallback((file: File): string | null => {
     const maxSize = 50 * 1024 * 1024 // 50MB
     const allowedTypes = ["image/", "video/", "audio/"]
@@ -27,46 +25,32 @@ export function PerformanceOptimizedDetection() {
     }
 
     if (!allowedTypes.some((type) => file.type.startsWith(type))) {
-      return "Unsupported file type"
+      return "Unsupported file type. Please upload images, videos, or audio files."
     }
 
     return null
   }, [])
 
-  // Optimized file analysis with caching
+  // Enhanced file analysis with real AI detection
   const analyzeFile = useCallback(
     async (file: File) => {
       const validationError = validateFile(file)
       if (validationError) {
-        alert(validationError)
+        setError(validationError)
         return
       }
 
       setIsAnalyzing(true)
       setProgress(0)
+      setError(null)
 
       try {
-        // Check cache first
-        const fileHash = cache.generateFileHash(file)
-        const cacheKey = cache.getCacheKey(fileHash, "detection")
-        const cachedResult = await cache.get(cacheKey)
-
-        if (cachedResult) {
-          setResult(cachedResult)
-          setIsAnalyzing(false)
-          await analytics.track({
-            event: "detection_cache_hit",
-            properties: { fileType: file.type, fileSize: file.size },
-          })
-          return
-        }
-
-        // Simulate progressive analysis
+        // Simulate progressive analysis stages
         const stages = [
-          { name: "Preprocessing", duration: 500, progress: 20 },
-          { name: "AI Analysis", duration: 2000, progress: 60 },
-          { name: "Ensemble Voting", duration: 1000, progress: 85 },
-          { name: "Generating Report", duration: 500, progress: 100 },
+          { name: "Preprocessing", duration: 800, progress: 15 },
+          { name: "AI Model Analysis", duration: 2000, progress: 45 },
+          { name: "Ensemble Voting", duration: 1500, progress: 75 },
+          { name: "Blockchain Verification", duration: 700, progress: 100 },
         ]
 
         for (const stage of stages) {
@@ -74,32 +58,17 @@ export function PerformanceOptimizedDetection() {
           await new Promise((resolve) => setTimeout(resolve, stage.duration))
         }
 
-        // Generate optimized result
-        const detectionResult = {
-          confidence: Math.floor(Math.random() * 40) + 60,
-          isAIGenerated: Math.random() > 0.4,
-          processingTime: Date.now(),
-          modelResults: [
-            {
-              name: "Optimized Detector v2.0",
-              confidence: Math.floor(Math.random() * 20) + 80,
-              details: "Advanced neural network analysis completed",
-            },
-          ],
-          metadata: {
-            fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
-            format: file.type.split("/")[1].toUpperCase(),
-          },
-        }
-
-        // Cache the result
-        await cache.set(cacheKey, detectionResult, 3600)
-
+        // Use real AI detection service
+        const detectionResult = await aiDetectionService.detectAI(file)
+        
         setResult(detectionResult)
-        await analytics.trackDetectionMetrics(detectionResult)
+        
+        // Track analytics
+        console.log('Detection completed:', detectionResult)
+        
       } catch (error) {
         console.error("Detection failed:", error)
-        alert("Detection failed. Please try again.")
+        setError("Detection failed. Please try again with a different file.")
       } finally {
         setIsAnalyzing(false)
       }
@@ -107,7 +76,7 @@ export function PerformanceOptimizedDetection() {
     [validateFile],
   )
 
-  // Memoized file handler
+  // File upload handler
   const handleFileUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0]
@@ -119,114 +88,256 @@ export function PerformanceOptimizedDetection() {
     [analyzeFile],
   )
 
-  // Memoized confidence color
+  // Drag and drop handler
+  const handleDrop = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault()
+      const file = event.dataTransfer.files[0]
+      if (file) {
+        setUploadedFile(file)
+        analyzeFile(file)
+      }
+    },
+    [analyzeFile],
+  )
+
+  const handleDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault()
+  }, [])
+
+  // Confidence color calculation
   const confidenceColor = useMemo(() => {
     if (!result) return ""
-    if (result.confidence >= 80) return "text-red-600"
-    if (result.confidence >= 50) return "text-yellow-600"
-    return "text-green-600"
+    if (result.confidence >= 80) return "text-rose-600"
+    if (result.confidence >= 60) return "text-amber-600"
+    return "text-emerald-600"
+  }, [result])
+
+  // Copy blockchain hash
+  const copyBlockchainHash = useCallback(() => {
+    if (result?.blockchainHash) {
+      navigator.clipboard.writeText(result.blockchainHash)
+    }
   }, [result])
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 px-4 sm:px-0">
-      {/* Optimized Upload Interface */}
-      <Card>
+      {/* Enhanced Upload Interface */}
+      <Card className="border-slate-200 shadow-sm">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-            <Brain className="h-5 w-5" />
-            Optimized AI Detection
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl text-slate-900">
+            <Brain className="h-5 w-5 text-slate-700" />
+            Advanced AI Detection
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="border-2 border-dashed rounded-lg p-6 sm:p-8 text-center hover:border-blue-300 transition-colors">
+          <div 
+            className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:border-slate-400 transition-colors bg-slate-50/50"
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+          >
             <input
               type="file"
               accept="image/*,video/*,audio/*"
               onChange={handleFileUpload}
               className="hidden"
-              id="optimized-file-upload"
+              id="advanced-file-upload"
               disabled={isAnalyzing}
             />
             <label
-              htmlFor="optimized-file-upload"
+              htmlFor="advanced-file-upload"
               className={`cursor-pointer block ${isAnalyzing ? "opacity-50" : ""}`}
             >
-              <Upload className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-3 sm:mb-4" />
-              <p className="text-base sm:text-lg font-medium mb-2">
-                {isAnalyzing ? "Processing..." : "High-Performance Detection"}
+              <Upload className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+              <p className="text-lg font-medium mb-2 text-slate-900">
+                {isAnalyzing ? "Processing..." : "Upload Media for Analysis"}
               </p>
-              <p className="text-sm sm:text-base text-gray-500">Optimized for speed and accuracy</p>
+              <p className="text-sm text-slate-600 mb-4">
+                Drag and drop or click to upload images, videos, or audio files
+              </p>
+              {uploadedFile && (
+                <div className="text-sm text-slate-500">
+                  Selected: {uploadedFile.name}
+                </div>
+              )}
             </label>
           </div>
         </CardContent>
       </Card>
 
-      {/* Progress Indicator */}
-      {isAnalyzing && (
-        <Card>
+      {/* Error Display */}
+      {error && (
+        <Card className="border-rose-200 bg-rose-50">
           <CardContent className="pt-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium flex items-center gap-2">
-                  <Zap className="h-4 w-4 animate-pulse text-blue-600" />
-                  Analyzing with optimized AI models...
-                </span>
-                <span className="text-sm text-gray-500">{progress}%</span>
-              </div>
-              <Progress value={progress} className="w-full h-2" />
+            <div className="flex items-center gap-2 text-rose-700">
+              <AlertTriangle className="h-5 w-5" />
+              <span className="font-medium">{error}</span>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* Optimized Results Display */}
-      {result && !isAnalyzing && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                Detection Results
-              </CardTitle>
-              <Badge variant={result.isAIGenerated ? "destructive" : "default"}>
-                {result.isAIGenerated ? "AI Generated" : "Likely Authentic"}
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="text-center space-y-4">
-              <div className="text-4xl sm:text-6xl font-bold">
-                <span className={confidenceColor}>{result.confidence}%</span>
+      {/* Enhanced Progress Indicator */}
+      {isAnalyzing && (
+        <Card className="border-slate-200 shadow-sm">
+          <CardContent className="pt-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium flex items-center gap-2 text-slate-700">
+                  <Zap className="h-4 w-4 animate-pulse text-slate-600" />
+                  Analyzing with multiple AI models...
+                </span>
+                <span className="text-sm text-slate-600">{progress}%</span>
               </div>
-              <p className="text-base sm:text-lg text-gray-600">Detection Confidence</p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <div className="text-lg font-semibold">File Size</div>
-                <div className="text-gray-600">{result.metadata.fileSize}</div>
+              <Progress value={progress} className="w-full h-2" />
+              <div className="text-xs text-slate-500">
+                Using ensemble of 6+ AI detection models for maximum accuracy
               </div>
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <div className="text-lg font-semibold">Format</div>
-                <div className="text-gray-600">{result.metadata.format}</div>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold">Analysis Details</h3>
-              {result.modelResults.map((model: any, index: number) => (
-                <div key={index} className="p-4 border rounded-lg">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-medium">{model.name}</span>
-                    <span className={`font-bold ${confidenceColor}`}>{model.confidence}%</span>
-                  </div>
-                  <Progress value={model.confidence} className="h-2 mb-2" />
-                  <p className="text-sm text-gray-600">{model.details}</p>
-                </div>
-              ))}
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* Enhanced Results Display */}
+      {result && !isAnalyzing && (
+        <div className="space-y-6">
+          {/* Main Result Card */}
+          <Card className="border-slate-200 shadow-sm">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-slate-900">
+                  <Shield className="h-5 w-5 text-slate-700" />
+                  Detection Results
+                </CardTitle>
+                <Badge 
+                  variant={result.isAIGenerated ? "destructive" : "default"}
+                  className={result.isAIGenerated ? "bg-rose-100 text-rose-800 border-rose-200" : "bg-emerald-100 text-emerald-800 border-emerald-200"}
+                >
+                  {result.isAIGenerated ? "AI Generated" : "Likely Authentic"}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Confidence Score */}
+              <div className="text-center space-y-4">
+                <div className="text-5xl sm:text-7xl font-bold">
+                  <span className={confidenceColor}>{result.confidence}%</span>
+                </div>
+                <p className="text-lg text-slate-600">Detection Confidence</p>
+              </div>
+
+              {/* File Information */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <div className="text-lg font-semibold text-slate-900">File Size</div>
+                  <div className="text-slate-600">{result.metadata.fileSize}</div>
+                </div>
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <div className="text-lg font-semibold text-slate-900">Format</div>
+                  <div className="text-slate-600">{result.metadata.format}</div>
+                </div>
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <div className="text-lg font-semibold text-slate-900">Processing Time</div>
+                  <div className="text-slate-600">{result.processingTime}ms</div>
+                </div>
+              </div>
+
+              {/* Blockchain Verification */}
+              {result.blockchainHash && (
+                <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium text-slate-900 mb-1">Blockchain Verification</h4>
+                      <p className="text-sm text-slate-600">Result verified on Polygon blockchain</p>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={copyBlockchainHash}>
+                      <Copy className="h-4 w-4 mr-2" />
+                      Copy Hash
+                    </Button>
+                  </div>
+                  <div className="mt-2 p-2 bg-white rounded border text-xs font-mono text-slate-600 break-all">
+                    {result.blockchainHash}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Detailed Analysis */}
+          <Card className="border-slate-200 shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-slate-900">Detailed Analysis</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {result.modelResults.map((model, index) => (
+                  <div key={index} className="p-4 border border-slate-200 rounded-lg">
+                    <div className="flex justify-between items-center mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-slate-900">{model.name}</span>
+                        <Badge variant="outline" className="text-xs">
+                          {model.modelType}
+                        </Badge>
+                      </div>
+                      <span className={`font-bold ${confidenceColor}`}>{model.confidence}%</span>
+                    </div>
+                    <Progress value={model.confidence} className="h-2 mb-2" />
+                    <p className="text-sm text-slate-600">{model.details}</p>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Processing time: {model.processingTime}ms
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Analysis Breakdown */}
+          {result.analysis && (
+            <Card className="border-slate-200 shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-slate-900">Analysis Breakdown</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {Object.entries(result.analysis).map(([key, value]) => (
+                    <div key={key} className="text-center p-3 bg-slate-50 rounded-lg">
+                      <div className="text-sm font-medium text-slate-700 mb-1">
+                        {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                      </div>
+                      <div className="text-lg font-bold text-slate-900">{value}%</div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex gap-3">
+            <Button 
+              variant="outline" 
+              className="flex-1"
+              onClick={() => {
+                setResult(null)
+                setUploadedFile(null)
+                setError(null)
+              }}
+            >
+              Analyze Another File
+            </Button>
+            <Button 
+              className="flex-1 bg-slate-900 hover:bg-slate-800"
+              onClick={() => {
+                // Share or export functionality
+                console.log('Sharing result:', result)
+              }}
+            >
+              <ExternalLink className="h-4 w-4 mr-2" />
+              Share Results
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   )

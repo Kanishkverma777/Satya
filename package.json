@@ -1,6 +1,7 @@
 {
-  "name": "Satya",
-  "version": "0.1.0",
+  "name": "satya",
+  "version": "1.0.0",
+  "description": "Modern & Sleek AI Media Detection Platform with Blockchain Verification",
   "private": true,
   "scripts": {
     "build": "next build",
