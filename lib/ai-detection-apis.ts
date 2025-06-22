@@ -555,4 +555,16 @@ class AIDetectionService {
   }
 }
 
-export const aiDetectionService = new AIDetectionService() 
+export const aiDetectionService = new AIDetectionService()
+
+export async function detectAI(file: File, apiKey: string) {
+  const response = await fetch('https://your-ai-api.com/analyze', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      // ...other headers
+    },
+    body: file,
+  })
+  // ...handle response...
+}

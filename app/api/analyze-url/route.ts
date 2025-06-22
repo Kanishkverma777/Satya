@@ -3,6 +3,14 @@ import { aiDetectionService } from '@/lib/ai-detection-apis'
 
 export async function POST(request: NextRequest) {
   try {
+    const apiKey = process.env.AI_API_KEY
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'API key is not configured on the server.' },
+        { status: 500 }
+      )
+    }
+
     const { url } = await request.json()
 
     if (!url) {
@@ -79,8 +87,6 @@ export async function POST(request: NextRequest) {
     // Convert response to File object
     const arrayBuffer = await response.arrayBuffer()
     const blob = new Blob([arrayBuffer], { type: contentType })
-    
-    // Create a File object with a meaningful name
     const fileName = `url-media-${Date.now()}.${contentType.split('/')[1]}`
     const file = new File([blob], fileName, { type: contentType })
 

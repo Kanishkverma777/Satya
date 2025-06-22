@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { aiDetectionService } from '@/lib/ai-detection-apis'
 
+const apiKey = process.env.AI_API_KEY
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
