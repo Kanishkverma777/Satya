@@ -60,7 +60,10 @@ const config: Config = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			}
+  			},
+  			'futuristic-bg': '#0f172a',
+  			'futuristic-accent': '#00ffe7',
+  			'futuristic-secondary': '#7c3aed',
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -88,7 +91,10 @@ const config: Config = {
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out'
-  		}
+  		},
+  		boxShadow: {
+  			'futuristic': '0 0 20px #00ffe7, 0 0 40px #7c3aed',
+  		},
   	}
   },
   plugins: [require("tailwindcss-animate")],
