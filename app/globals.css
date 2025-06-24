@@ -55,6 +55,10 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', 'Orbitron', sans-serif;
+    background: #0f172a;
+    color: #fff;
+    letter-spacing: 0.01em;
   }
 }
 
@@ -124,4 +128,13 @@
 
 .text-responsive-xl {
   font-size: clamp(1.25rem, 4vw, 1.5rem);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #222c3a;
+  border-radius: 8px;
 }
