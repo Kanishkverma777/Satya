@@ -1,50 +1,73 @@
-import { PerformanceOptimizedDetection } from "@/components/performance-optimized-detection"
-import { CollaborativeDetection } from "@/components/collaborative-detection"
-import { AIModelComparison } from "@/components/ai-model-comparison"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Brain, Users, BarChart3 } from "lucide-react"
+import DetectionForm from "@/components/DetectionForm"
 
 export default function DetectPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 py-6 sm:py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-            Advanced AI Detection
-          </h1>
-          <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto">
-            Choose your detection method: individual analysis, collaborative sessions, or multi-model comparison
-          </p>
-        </div>
-        
-        <Tabs defaultValue="individual" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-3 bg-slate-100/50 p-1 rounded-xl">
-            <TabsTrigger value="individual" className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg">
-              <Brain className="h-4 w-4" />
-              Individual Analysis
-            </TabsTrigger>
-            <TabsTrigger value="collaborative" className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg">
-              <Users className="h-4 w-4" />
-              Collaborative Session
-            </TabsTrigger>
-            <TabsTrigger value="comparison" className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg">
-              <BarChart3 className="h-4 w-4" />
-              Model Comparison
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="individual" className="space-y-6">
-            <PerformanceOptimizedDetection />
-          </TabsContent>
-
-          <TabsContent value="collaborative" className="space-y-6">
-            <CollaborativeDetection />
-          </TabsContent>
-
-          <TabsContent value="comparison" className="space-y-6">
-            <AIModelComparison />
-          </TabsContent>
-        </Tabs>
+    <div style={{
+      minHeight: '100vh',
+      color: '#fff',
+      fontFamily: 'Orbitron, Arial, sans-serif',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
+      {/* Minimal nav */}
+      <nav style={{
+        position: 'absolute',
+        top: 32,
+        left: 0,
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        gap: 32,
+        fontSize: 14,
+        letterSpacing: 2,
+        color: '#aaa',
+        zIndex: 2,
+      }}>
+        <span>[ ACCESS TERMINAL ]</span>
+        <span>[ TRANSMISSION LOGS ]</span>
+        <span>[ BIO-ARCHIVE ]</span>
+        <span>[ INITIATE CONTACT ]</span>
+      </nav>
+      {/* Central detection card */}
+      <div style={{
+        width: 400,
+        minHeight: 320,
+        borderRadius: 32,
+        background: 'rgba(30,30,30,0.95)',
+        margin: '0 auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 0 80px 10px #111',
+        position: 'relative',
+        zIndex: 1,
+        padding: 40,
+      }}>
+        <h2 style={{
+          fontSize: 36,
+          fontWeight: 200,
+          letterSpacing: 8,
+          margin: '0 0 24px 0',
+          textAlign: 'center',
+          color: '#fff',
+        }}>
+          DETECT AI MEDIA
+        </h2>
+        <DetectionForm />
+      </div>
+      {/* Futuristic HUD details (optional) */}
+      <div style={{position: 'absolute', left: 32, bottom: 32, color: '#444', fontSize: 12, letterSpacing: 1}}>
+        ΔΣ / DATA STREAM: UNFOLDING ∆00.<br />
+        SECTOR: ENERGIZED ∆17.<br />
+        Θ - DATA FIELD: CONNECTED ∆2A.
+      </div>
+      <div style={{position: 'absolute', right: 32, bottom: 32, color: '#444', fontSize: 12, letterSpacing: 1}}>
+        NODE ACTIVATION COMPLETE. ENERGY CONVERGING
       </div>
     </div>
   )

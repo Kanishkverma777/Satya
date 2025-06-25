@@ -3,8 +3,17 @@ import { aiDetectionService } from '@/lib/ai-detection-apis'
 
 const apiKey = process.env.AI_API_KEY
 
+console.log('API KEY:', process.env.AI_API_KEY);
+
 export async function POST(request: NextRequest) {
   try {
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'API key is not configured on the server.' },
+        { status: 500 }
+      )
+    }
+
     const formData = await request.formData()
     const file = formData.get('file') as File
 

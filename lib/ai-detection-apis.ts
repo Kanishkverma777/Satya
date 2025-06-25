@@ -43,7 +43,7 @@ const API_CONFIG = {
   // HuggingFace API with your provided key
   HUGGINGFACE: {
     baseUrl: 'https://api-inference.huggingface.co/models',
-    apiKey: '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', // Your API key
+    apiKey: process.env.AI_API_KEY, // Use environment variable
     models: {
       image: 'microsoft/DialoGPT-medium',
       text: 'microsoft/DialoGPT-medium',
@@ -81,7 +81,9 @@ class AIDetectionService {
       })
       
       if (!response.ok) {
-        throw new Error(`API request failed: ${response.status}`)
+        const errorText = await response.text();
+        console.error('❌ API request failed:', response.status, response.statusText, errorText);
+        throw new Error(`API request failed: ${response.status} - ${errorText}`);
       }
       
       return await response.json()
@@ -93,6 +95,9 @@ class AIDetectionService {
 
   private async analyzeWithHuggingFace(file: File): Promise<ModelResult> {
     try {
+      if (!API_CONFIG.HUGGINGFACE.apiKey) {
+        throw new Error('HuggingFace API key is not set in the environment.')
+      }
       console.log('🔍 Starting HuggingFace API analysis...')
       console.log('📁 File type:', file.type)
       console.log('📏 File size:', file.size, 'bytes')
@@ -101,10 +106,8 @@ class AIDetectionService {
       const formData = new FormData()
       formData.append('file', file)
       
-      // Use a more appropriate model for image analysis
-      const modelEndpoint = file.type.startsWith('image') 
-        ? 'facebook/detr-resnet-50' 
-        : 'microsoft/DialoGPT-medium'
+      // Use a public image classification model for all file types
+      const modelEndpoint = 'microsoft/resnet-50';
       
       console.log('🤖 Using model:', modelEndpoint)
       console.log('🌐 API URL:', `${API_CONFIG.HUGGINGFACE.baseUrl}/${modelEndpoint}`)
@@ -123,8 +126,9 @@ class AIDetectionService {
       console.log('📊 Response status:', response.status)
       
       if (!response.ok) {
-        console.error('❌ API request failed:', response.status, response.statusText)
-        throw new Error(`API request failed: ${response.status}`)
+        const errorText = await response.text();
+        console.error('❌ API request failed:', response.status, response.statusText, errorText);
+        throw new Error(`API request failed: ${response.status} - ${errorText}`);
       }
       
       const result = await response.json()

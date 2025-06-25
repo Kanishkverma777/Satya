@@ -94,28 +94,28 @@ export function DetectionInterface() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 px-4 sm:px-0">
       {/* Main Detection Interface */}
-      <Card className="border-slate-200 shadow-sm">
+      <Card className="border-[#23283a] bg-[#181c25] shadow-lg">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-slate-900">
-            <Brain className="h-5 w-5 text-slate-700" />
+          <CardTitle className="flex items-center gap-2 text-[#f3f4f6]">
+            <Brain className="h-5 w-5 text-cyan-400" />
             AI Media Detection
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="upload" className="flex items-center gap-2">
+            <TabsList className="grid w-full grid-cols-2 bg-[#23283a] border border-[#23283a]">
+              <TabsTrigger value="upload" className="flex items-center gap-2 text-[#f3f4f6] data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
                 <Upload className="h-4 w-4" />
                 Upload File
               </TabsTrigger>
-              <TabsTrigger value="url" className="flex items-center gap-2">
+              <TabsTrigger value="url" className="flex items-center gap-2 text-[#f3f4f6] data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
                 <Link className="h-4 w-4" />
                 Analyze URL
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="upload" className="space-y-4">
-              <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:border-slate-400 transition-colors bg-slate-50/50">
+              <div className="border-2 border-dashed border-cyan-700 rounded-xl p-8 text-center hover:border-cyan-400 transition-colors bg-[#23283a]">
                 <input
                   type="file"
                   accept="image/*,video/*,audio/*"
@@ -128,11 +128,11 @@ export function DetectionInterface() {
                   htmlFor="file-upload"
                   className={`cursor-pointer block ${isAnalyzing ? "opacity-50" : ""}`}
                 >
-                  <Upload className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                  <p className="text-lg font-medium mb-2 text-slate-900">
+                  <Upload className="h-12 w-12 text-cyan-400 mx-auto mb-4" />
+                  <p className="text-lg font-medium mb-2 text-[#f3f4f6]">
                     {isAnalyzing ? "Processing..." : "Upload Media File"}
                   </p>
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm text-[#64748b]">
                     Drag and drop or click to upload images, videos, or audio files
                   </p>
                 </label>
@@ -142,7 +142,7 @@ export function DetectionInterface() {
             <TabsContent value="url" className="space-y-4">
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="url-input" className="block text-sm font-medium text-slate-700 mb-2">
+                  <label htmlFor="url-input" className="block text-sm font-medium text-[#f3f4f6] mb-2">
                     Media URL
                   </label>
                   <Input
@@ -152,17 +152,17 @@ export function DetectionInterface() {
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     disabled={isAnalyzing}
-                    className="w-full"
+                    className="w-full bg-[#23283a] border-[#23283a] text-[#f3f4f6]"
                   />
                 </div>
                 <Button 
                   onClick={handleUrlAnalysis}
                   disabled={isAnalyzing || !url.trim()}
-                  className="w-full bg-slate-900 hover:bg-slate-800"
+                  className="w-full bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-cyan-500 hover:to-indigo-600 text-white"
                 >
                   {isAnalyzing ? "Analyzing..." : "Analyze URL"}
                 </Button>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#64748b]">
                   Supported platforms: YouTube, Instagram, Twitter, TikTok, and more
                 </p>
               </div>
@@ -173,9 +173,9 @@ export function DetectionInterface() {
 
       {/* Error Display */}
       {error && (
-        <Card className="border-rose-200 bg-rose-50">
+        <Card className="border-[#ef4444] bg-[#2a1a1a]">
           <CardContent className="pt-6">
-            <div className="flex items-center gap-2 text-rose-700">
+            <div className="flex items-center gap-2 text-[#ef4444]">
               <AlertTriangle className="h-5 w-5" />
               <span className="font-medium">{error}</span>
             </div>
@@ -185,18 +185,18 @@ export function DetectionInterface() {
 
       {/* Progress Indicator */}
       {isAnalyzing && (
-        <Card className="border-slate-200 shadow-sm">
+        <Card className="border-[#23283a] bg-[#181c25] shadow-lg">
           <CardContent className="pt-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium flex items-center gap-2 text-slate-700">
-                  <Brain className="h-4 w-4 animate-pulse text-slate-600" />
+                <span className="text-sm font-medium flex items-center gap-2 text-[#f3f4f6]">
+                  <Brain className="h-4 w-4 animate-pulse text-cyan-400" />
                   Analyzing with AI models...
                 </span>
-                <span className="text-sm text-slate-600">{progress}%</span>
+                <span className="text-sm text-[#64748b]">{progress}%</span>
               </div>
-              <Progress value={progress} className="w-full h-2" />
-              <div className="text-xs text-slate-500">
+              <Progress value={progress} className="w-full h-2 bg-[#23283a]" />
+              <div className="text-xs text-[#64748b]">
                 Using ensemble of multiple AI detection models
               </div>
             </div>
@@ -208,16 +208,16 @@ export function DetectionInterface() {
       {result && !isAnalyzing && (
         <div className="space-y-6">
           {/* Main Result */}
-          <Card className="border-slate-200 shadow-sm">
+          <Card className="border-[#23283a] bg-[#181c25] shadow-lg">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2 text-slate-900">
-                  <Shield className="h-5 w-5 text-slate-700" />
+                <CardTitle className="flex items-center gap-2 text-[#f3f4f6]">
+                  <Shield className="h-5 w-5 text-cyan-400" />
                   Detection Results
                 </CardTitle>
                 <Badge 
                   variant={result.isAIGenerated ? "destructive" : "default"}
-                  className={result.isAIGenerated ? "bg-rose-100 text-rose-800 border-rose-200" : "bg-emerald-100 text-emerald-800 border-emerald-200"}
+                  className={result.isAIGenerated ? "bg-[#2a1a1a] text-[#ef4444] border-[#ef4444]" : "bg-[#23283a] text-[#14b8a6] border-[#14b8a6]"}
                 >
                   {result.isAIGenerated ? "AI Generated" : "Likely Authentic"}
                 </Badge>
@@ -227,36 +227,36 @@ export function DetectionInterface() {
               {/* Confidence Score */}
               <div className="text-center space-y-4">
                 <div className="text-5xl sm:text-7xl font-bold">
-                  <span className={getConfidenceColor(result.confidence)}>
+                  <span className={getConfidenceColor(result.confidence) + " drop-shadow-lg"}>
                     {result.confidence}%
                   </span>
                 </div>
-                <p className="text-lg text-slate-600">Detection Confidence</p>
+                <p className="text-lg text-[#64748b]">Detection Confidence</p>
               </div>
 
               {/* File/URL Information */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                <div className="p-4 bg-slate-50 rounded-lg">
-                  <div className="text-lg font-semibold text-slate-900">File Size</div>
-                  <div className="text-slate-600">{result.metadata.fileSize}</div>
+                <div className="p-4 bg-[#23283a] rounded-lg">
+                  <div className="text-lg font-semibold text-[#f3f4f6]">File Size</div>
+                  <div className="text-[#64748b]">{result.metadata.fileSize}</div>
                 </div>
-                <div className="p-4 bg-slate-50 rounded-lg">
-                  <div className="text-lg font-semibold text-slate-900">Format</div>
-                  <div className="text-slate-600">{result.metadata.format}</div>
+                <div className="p-4 bg-[#23283a] rounded-lg">
+                  <div className="text-lg font-semibold text-[#f3f4f6]">Format</div>
+                  <div className="text-[#64748b]">{result.metadata.format}</div>
                 </div>
-                <div className="p-4 bg-slate-50 rounded-lg">
-                  <div className="text-lg font-semibold text-slate-900">Processing Time</div>
-                  <div className="text-slate-600">{result.processingTime}ms</div>
+                <div className="p-4 bg-[#23283a] rounded-lg">
+                  <div className="text-lg font-semibold text-[#f3f4f6]">Processing Time</div>
+                  <div className="text-[#64748b]">{result.processingTime}ms</div>
                 </div>
               </div>
 
               {/* URL Source Info */}
               {(result as any).sourceUrl && (
-                <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <div className="p-4 bg-[#23283a] rounded-lg border border-[#23283a]">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-medium text-slate-900 mb-1">Source URL</h4>
-                      <p className="text-sm text-slate-600">{(result as any).domain}</p>
+                      <h4 className="font-medium text-[#f3f4f6] mb-1">Source URL</h4>
+                      <p className="text-sm text-[#64748b]">{(result as any).domain}</p>
                     </div>
                     <Button variant="outline" size="sm" asChild>
                       <a href={(result as any).sourceUrl} target="_blank" rel="noopener noreferrer">
@@ -264,7 +264,7 @@ export function DetectionInterface() {
                       </a>
                     </Button>
                   </div>
-                  <div className="mt-2 p-2 bg-white rounded border text-xs font-mono text-slate-600 break-all">
+                  <div className="mt-2 p-2 bg-[#23283a] rounded border text-xs font-mono text-[#64748b] break-all">
                     {(result as any).sourceUrl}
                   </div>
                 </div>
@@ -272,11 +272,11 @@ export function DetectionInterface() {
 
               {/* Blockchain Verification */}
               {result.blockchainHash && (
-                <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <div className="p-4 bg-[#23283a] rounded-lg border border-[#23283a]">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-medium text-slate-900 mb-1">Blockchain Verification</h4>
-                      <p className="text-sm text-slate-600">Result verified on Polygon blockchain</p>
+                      <h4 className="font-medium text-[#f3f4f6] mb-1">Blockchain Verification</h4>
+                      <p className="text-sm text-[#64748b]">Result verified on Polygon blockchain</p>
                     </div>
                     <Button 
                       variant="outline" 
@@ -286,7 +286,7 @@ export function DetectionInterface() {
                       Copy Hash
                     </Button>
                   </div>
-                  <div className="mt-2 p-2 bg-white rounded border text-xs font-mono text-slate-600 break-all">
+                  <div className="mt-2 p-2 bg-[#23283a] rounded border text-xs font-mono text-[#64748b] break-all">
                     {result.blockchainHash}
                   </div>
                 </div>
@@ -295,17 +295,17 @@ export function DetectionInterface() {
           </Card>
 
           {/* Model Results */}
-          <Card className="border-slate-200 shadow-sm">
+          <Card className="border-[#23283a] bg-[#181c25] shadow-lg">
             <CardHeader>
-              <CardTitle className="text-slate-900">Model Analysis</CardTitle>
+              <CardTitle className="text-[#f3f4f6]">Model Analysis</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {result.modelResults.map((model, index) => (
-                  <div key={index} className="p-4 border border-slate-200 rounded-lg">
+                  <div key={index} className="p-4 border border-[#23283a] rounded-lg">
                     <div className="flex justify-between items-center mb-3">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-slate-900">{model.name}</span>
+                        <span className="font-medium text-[#f3f4f6]">{model.name}</span>
                         <Badge variant="outline" className="text-xs">
                           {model.modelType}
                         </Badge>
@@ -315,7 +315,7 @@ export function DetectionInterface() {
                       </span>
                     </div>
                     <Progress value={model.confidence} className="h-2 mb-2" />
-                    <p className="text-sm text-slate-600">{model.details}</p>
+                    <p className="text-sm text-[#64748b]">{model.details}</p>
                   </div>
                 ))}
               </div>
@@ -324,18 +324,18 @@ export function DetectionInterface() {
 
           {/* Analysis Breakdown */}
           {result.analysis && (
-            <Card className="border-slate-200 shadow-sm">
+            <Card className="border-[#23283a] bg-[#181c25] shadow-lg">
               <CardHeader>
-                <CardTitle className="text-slate-900">Analysis Breakdown</CardTitle>
+                <CardTitle className="text-[#f3f4f6]">Analysis Breakdown</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {Object.entries(result.analysis).map(([key, value]) => (
-                    <div key={key} className="text-center p-3 bg-slate-50 rounded-lg">
-                      <div className="text-sm font-medium text-slate-700 mb-1">
+                    <div key={key} className="text-center p-3 bg-[#23283a] rounded-lg">
+                      <div className="text-sm font-medium text-[#f3f4f6] mb-1">
                         {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                       </div>
-                      <div className="text-lg font-bold text-slate-900">{value}%</div>
+                      <div className="text-lg font-bold text-[#f3f4f6]">{value}%</div>
                     </div>
                   ))}
                 </div>
@@ -357,7 +357,7 @@ export function DetectionInterface() {
               Analyze Another
             </Button>
             <Button 
-              className="flex-1 bg-slate-900 hover:bg-slate-800"
+              className="flex-1 bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-cyan-500 hover:to-indigo-600 text-white"
               onClick={() => {
                 // Share functionality
                 const shareData = {
