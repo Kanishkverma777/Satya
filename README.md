@@ -1,6 +1,6 @@
 # Satya - Advanced AI Media Detection Platform
 
-Satya is a cutting-edge AI media detection platform that combines multiple detection models with blockchain verification to provide unprecedented accuracy in identifying AI-generated content.
+Satya is a cutting-edge AI media detection platform that provide unprecedented accuracy in identifying AI-generated content.
 
 ![Satya AI Detection](https://img.shields.io/badge/Satya-AI%20Detection-blue)
 ![Accuracy](https://img.shields.io/badge/Accuracy-99.2%25-brightgreen)
